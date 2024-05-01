@@ -3,8 +3,9 @@ sys.path.append("./src")
 
 import pandas as pd
 from data_preparation import DataPreparation
-from AR_SC_Markov import AR_SC_Markov
-from SC_Markov import SC_Markov
+from AR_MRS import AR_SC_Markov
+from MRS import SC_Markov
+from AR_MRS_OW import AR_SC_Markov_OW
 
 
 if __name__ == "__main__":
@@ -17,6 +18,8 @@ if __name__ == "__main__":
 
     dataprep.prepare_data()
     dataprep.plot_GNP_crisis()
+
+    print(dataprep.df)
 
     print("\n")
     print(111*'*')
@@ -33,6 +36,14 @@ if __name__ == "__main__":
 
     model_AR_SC = AR_SC_Markov(dataprep.df, 2, 2)
     model_AR_SC.run_modelization()
+
+    print("\n")
+    print(135 * '*')
+    print(50*'*' + ' AR SC MARKOV with Optimal Weigths ' + 50*'*')
+    print(135 * '*')
+
+    model_AR_SC_OW = AR_SC_Markov_OW(dataprep.df, 2, 2)
+    model_AR_SC_OW.run_modelization()
 
 
 

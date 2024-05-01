@@ -1,6 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 from statsmodels.tsa.regime_switching.markov_regression import MarkovRegression
+from tabulate import tabulate
+
 
 class SC_Markov():
     def __init__(self, df, n_states):
@@ -73,15 +76,54 @@ class SC_Markov():
         )
 
         transition_matrix /= np.sum(transition_matrix, axis=1)[:, None]
-
+        transition_matrix = self.model_fitted.regime_transition
+        print("\n")
         print("Transition Matrix : ")
-        print(transition_matrix)
+        print("      | Régime 0 | Régime 1")
+        print("--------------------------------")
+        for i, row in enumerate(transition_matrix):
+            print(f"De R{i} | {row[0]} | {row[1]}")
+        print("\n")
+
+    def get_metrics(self):
+        predictions = self.model_fitted.predict()
+        actual = self.df['GR_GNP'].iloc[:len(predictions)]
+
+        # Calculez la taille des parties
+        num_rows = len(self.df)
+        part_size = num_rows // 4
+
+        # Initialisez une liste pour stocker les résultats
+        results = []
+        liste_periode = ['1947-01-01 à 2023-10-01 ', '1947-01-01 à 1996-10-01 ', '1997-01-01 à 2008-10-01', '2009-01-01 à 2017-10-01',
+                         '2018-01-01 à 2023-10-01']
+
+        # Divisez les données en 4 parties égales
+        for i in range(4):
+            start_index = i * part_size
+            end_index = (i + 1) * part_size if i < 3 else num_rows
+            part_actual = actual.iloc[start_index:end_index]
+            part_predictions = predictions[start_index:end_index]
+
+            # Calculez les métriques pour cette partie
+            mse = mean_squared_error(part_actual, part_predictions)
+            mae = mean_absolute_error(part_actual, part_predictions)
+
+            # Ajouter les résultats à la liste
+            results.append([liste_periode[i], mse, mae])
+
+        # Afficher les résultats dans le terminal
+        headers = ["Period", "MSE", "MAE"]
+        print("\n")
+        print("Tableau des erreurs")
+        print(tabulate(results, headers=headers, floatfmt=".4f"))
+        print("\n")
 
     def run_modelization(self):
         self.initialize_model()
         self.fit_model()
         self.get_summary()
-        self.plot_in_sample_forecast()
         self.plot_recession_probabilty()
+        self.get_metrics()
         self.get_transition_matrix()
 

@@ -26,6 +26,8 @@ class DataPreparation():
     def prepare_data(self):
         self.compute_log_GNP()
         self.get_crisis_period()
+        self.df = self.df.merge(self.crisis, how = "left", on = "DATE")
+        self.df = self.df.rename(columns={"USREC": "crise"})
 
     def plot_GNP_crisis(self):
         plt.figure(figsize=(10, 5))
