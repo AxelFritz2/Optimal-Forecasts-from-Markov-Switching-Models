@@ -13,7 +13,7 @@ class AR_SC_Markov_OW():
 
     def initialize_model(self):
         print("Model Initialization : \n"
-              "Model : Markov Auto Regression with Optimal Weights \n"
+              "Model : Markov Auto Regression with Optimal Weights and Known States \n"
               f"Number of states : {self.n_states} \n"
               f"order : {self.order}")
 

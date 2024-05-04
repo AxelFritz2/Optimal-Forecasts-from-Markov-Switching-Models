@@ -5,7 +5,8 @@ import pandas as pd
 from data_preparation import DataPreparation
 from AR_MRS import AR_SC_Markov
 from MRS import SC_Markov
-from AR_MRS_OW import AR_SC_Markov_OW
+from AR_MRS_OW_KS import AR_SC_Markov_OW
+from AR_MRS_OW_US import AR_SC_Markov_OW_US
 
 
 if __name__ == "__main__":
@@ -38,12 +39,21 @@ if __name__ == "__main__":
     model_AR_SC.run_modelization()
 
     print("\n")
-    print(135 * '*')
-    print(50*'*' + ' AR SC MARKOV with Optimal Weigths ' + 50*'*')
-    print(135 * '*')
+    print(151 * '*')
+    print(50*'*' + ' AR SC MARKOV with Optimal Weigths and Known States' + 50*'*')
+    print(151 * '*')
 
     model_AR_SC_OW = AR_SC_Markov_OW(dataprep.df, 2, 2)
     model_AR_SC_OW.run_modelization()
+
+    print("\n")
+    print(152 * '*')
+    print(50*'*' + ' AR SC MARKOV with Optimal Weigths and Uknown States' + 50*'*')
+    print(152 * '*')
+
+    model_AR_SC_OW_US = AR_SC_Markov_OW_US(dataprep.df, 2, 2)
+    model_AR_SC_OW_US.run_modelization()
+
 
 
 
