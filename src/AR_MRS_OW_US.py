@@ -64,6 +64,7 @@ class AR_SC_Markov_OW_US():
         ax1.plot(df_temp["DATE"], df_temp['GR_GNP'], label='GR_GNP')
         ax1.set_ylabel('GR_GNP', color='C0')
         ax1.tick_params(axis='y', labelcolor='C0')
+        ax1.set_title('Probabilité de Récession - Modèle MSM-AR(2) Poids optimaux et états inconnus')
 
         ax2 = ax1.twinx()
         ax2.fill_between(df_temp["DATE"], smoothed_marginal_probabilities[1], step='pre', alpha=0.4, color='C1')
@@ -89,7 +90,7 @@ class AR_SC_Markov_OW_US():
         )
 
         transition_matrix /= np.sum(transition_matrix, axis=1)[:, None]
-        transition_matrix = self.model_fitted.regime_transition
+        transition_matrix = self.model_fitted_OW.regime_transition
         print("\n")
         print("Transition Matrix : ")
         print("      | Régime 0 | Régime 1")

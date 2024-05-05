@@ -51,6 +51,7 @@ class SC_Markov():
         ax1.plot(self.df["DATE"], self.df['GR_GNP'], label='GR_GNP')
         ax1.set_ylabel('GR_GNP', color='C0')
         ax1.tick_params(axis='y', labelcolor='C0')
+        ax1.set_title('Probabilité de Récession - Modèle MSM')
 
         ax2 = ax1.twinx()
         ax2.fill_between(self.df["DATE"], smoothed_marginal_probabilities[1], step='pre', alpha=0.4, color='C1')
