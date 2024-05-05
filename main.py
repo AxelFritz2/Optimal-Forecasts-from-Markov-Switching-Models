@@ -3,8 +3,8 @@ sys.path.append("./src")
 
 import pandas as pd
 from data_preparation import DataPreparation
-from AR_MRS import AR_SC_Markov
 from MRS import SC_Markov
+from AR_MRS import AR_SC_Markov
 from AR_MRS_OW_KS import AR_SC_Markov_OW
 from AR_MRS_OW_US import AR_SC_Markov_OW_US
 

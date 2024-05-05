@@ -48,12 +48,12 @@ class SC_Markov():
         # Plot the series and the smoothed probabilities
         fig, ax1 = plt.subplots()
 
-        ax1.plot(self.df.index, self.df['GR_GNP'], label='GR_GNP')
+        ax1.plot(self.df["DATE"], self.df['GR_GNP'], label='GR_GNP')
         ax1.set_ylabel('GR_GNP', color='C0')
         ax1.tick_params(axis='y', labelcolor='C0')
 
         ax2 = ax1.twinx()
-        ax2.fill_between(self.df.index, smoothed_marginal_probabilities[1], step='pre', alpha=0.4, color='C1')
+        ax2.fill_between(self.df["DATE"], smoothed_marginal_probabilities[1], step='pre', alpha=0.4, color='C1')
         ax2.set_ylabel('Probability of Regime 1', color='C1')
         ax2.tick_params(axis='y', labelcolor='C1')
         ax2.set_ylim([0, 1])
@@ -87,30 +87,25 @@ class SC_Markov():
 
     def get_metrics(self):
         predictions = self.model_fitted.predict()
-        actual = self.df['GR_GNP'].iloc[:len(predictions)]
 
-        # Calculez la taille des parties
-        num_rows = len(self.df)
-        part_size = num_rows // 4
+        liste_periode = ['1947-01-01 à 2023-10-01 ', '1947-01-01 à 1996-10-01 ', '1997-01-01 à 2008-10-01',
+                         '2009-01-01 à 2017-10-01', '2018-01-01 à 2023-10-01']
 
-        # Initialisez une liste pour stocker les résultats
+        # Liste pour stocker les résultats
         results = []
-        liste_periode = ['1947-01-01 à 2023-10-01 ', '1947-01-01 à 1996-10-01 ', '1997-01-01 à 2008-10-01', '2009-01-01 à 2017-10-01',
-                         '2018-01-01 à 2023-10-01']
 
-        # Divisez les données en 4 parties égales
-        for i in range(4):
-            start_index = i * part_size
-            end_index = (i + 1) * part_size if i < 3 else num_rows
-            part_actual = actual.iloc[start_index:end_index]
-            part_predictions = predictions[start_index:end_index]
+        # Boucler sur les périodes définies
+        for periode in liste_periode:
+            start_date, end_date = periode.split(" à ")
+            part_actual = self.df[(self.df['DATE'] >= start_date) & (self.df['DATE'] <= end_date)]['GR_GNP']
+            part_predictions = predictions[(self.df['DATE'] >= start_date) & (self.df['DATE'] <= end_date)]
 
-            # Calculez les métriques pour cette partie
+            # Calculer les métriques pour cette partie
             mse = mean_squared_error(part_actual, part_predictions)
             mae = mean_absolute_error(part_actual, part_predictions)
 
             # Ajouter les résultats à la liste
-            results.append([liste_periode[i], mse, mae])
+            results.append([periode, mse, mae])
 
         # Afficher les résultats dans le terminal
         headers = ["Period", "MSE", "MAE"]
